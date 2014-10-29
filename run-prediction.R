@@ -1,13 +1,21 @@
-directory <- "~/Dropbox/Coursera/DataScienceSpecialization//dsscapstone-001/"
+directory <- "~/Dropbox/Coursera/DataScienceSpecialization//dsscapstone-001//"
 setwd(directory)
 
 #Load dictionaries
 source("predictive-text-analysis/loadDictList.R")
-sourceletter = "t"; lines = 100000; ngrams = 5; rweka = FALSE; type = "tdm"; sorted = TRUE
+lines = "5e+05"; ngrams = 4; rweka = FALSE; type = "tdm"; sorted = TRUE
 tdictlist <- loadDictList("t", lines, ngrams, rweka, type, sorted)
 bdictlist <- loadDictList("b", lines, ngrams, rweka, type, sorted)
 ndictlist <- loadDictList("n", lines, ngrams, rweka, type, sorted)
-rm(sourceletter); rm(lines); rm(ngrams); rm(rweka); rm(type); rm(sorted)
+rm(lines); rm(ngrams); rm(rweka); rm(type); rm(sorted)
+
+source("predictive-text-analysis/loadDictList.R")
+lines = 500000; ngrams = 1; rweka = TRUE; type = "tdm"; sorted = TRUE
+tdictlist <- loadDictList("t", lines, ngrams, rweka, type, sorted)
+bdictlist <- loadDictList("b", lines, ngrams, rweka, type, sorted)
+ndictlist <- loadDictList("n", lines, ngrams, rweka, type, sorted)
+rm(lines); rm(ngrams); rm(rweka); rm(type); rm(sorted)
+
 
 # Load prediction script
 source("predictive-text-analysis/dfFindNextWord.R")
@@ -16,7 +24,17 @@ td <- dfFindNextWord("I can't wait to", tdictlist, 10)
 bd <- dfFindNextWord("I can't wait to", bdictlist, 10)
 nd <- dfFindNextWord("I can't wait to", ndictlist, 10)
 
-td;bd;nd
+bd
+
+resultslist <- c()
+for(i in 1:10){
+    result.temp <- dfFindNextWord(quiz2[[i]][1], bdictlist, 15)
+    resultslist <- c(resultslist, list(result.temp))
+}
+
+resultslist
+
+
 
 #List of strings to predict next words:
 searchlist <- c("The guy in front of me just bought a pound of bacon, a bouquet, and a case of",

@@ -1,31 +1,34 @@
 directory <- "~/Dropbox/Coursera/DataScienceSpecialization//dsscapstone-001/"
-
+setwd(directory)
 source("predictive-text-analysis/compiled_scripts.R")
-rweka = FALSE; precleaned = FALSE
 
-lines = 100000; ngrams = 1
+#Creates cleaned corpuses -> rds. Then creates tokenizes the corpus -> rds.
+
+rweka = TRUE; precleaned = TRUE
+
+lines = 500000; ngrams = 1
 ngramModel("t", lines, ngrams, rweka, precleaned) #cleaning 8 min, then 1.2 min
 ngramModel("b", lines, ngrams, rweka, precleaned) #cleaning 9 min, then 1.4 min
 ngramModel("n", lines, ngrams, rweka, precleaned) #cleaning 9 min, then 1.4 min
 
 precleaned = TRUE
 
-lines = 100000; ngrams = 2
+lines = 500000; ngrams = 2
 ngramModel("t", lines, ngrams, rweka, precleaned) # 1.5 min
 ngramModel("b", lines, ngrams, rweka, precleaned) # 2.5 min
 ngramModel("n", lines, ngrams, rweka, precleaned) # 2.1 min
 
-lines = 100000; ngrams = 3
+lines = 500000; ngrams = 3
 ngramModel("t", lines, ngrams, rweka, precleaned) # 1.7 min
 ngramModel("b", lines, ngrams, rweka, precleaned) # 3.1 min
 ngramModel("n", lines, ngrams, rweka, precleaned) # 2.5 min
 
-lines = 100000; ngrams = 4
+lines = 500000; ngrams = 4
 ngramModel("t", lines, ngrams, rweka, precleaned) # 1.6 min
 ngramModel("b", lines, ngrams, rweka, precleaned) # 3.3 min
 ngramModel("n", lines, ngrams, rweka, precleaned) # 2.7 min
 
-lines = 100000; ngrams = 5
+lines = 500000; ngrams = 5
 ngramModel("t", lines, ngrams, rweka, precleaned) # 1.6 min
 ngramModel("b", lines, ngrams, rweka, precleaned) # 3.6 min 
 ngramModel("n", lines, ngrams, rweka, precleaned) # 2.8 min

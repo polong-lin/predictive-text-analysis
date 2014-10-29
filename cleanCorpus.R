@@ -1,9 +1,8 @@
-
 ## Clean Corpus ####
 
 #Create clean functions
 remove_symbols <- function(corpus) gsub(perl = TRUE, 
-                                        pattern = '[\\]\\[\\(\\)-/+;:#%$^\\*=^~\\{\\}/"<>«»_\\“\\”⁰•‘’–]', 
+                                        pattern = '[\\]\\[\\(\\)-/+;:#%$^\\*=^~\\{\\}/"<>«»_\\\\“\\”⁰•‘’–]', 
                                         replacement = "", corpus)
 
 convert_to_period <- function(corpus) gsub(pattern = "[\\!\\?…]", 
@@ -15,6 +14,7 @@ censor_profanity <- function(corpus) gsub(pattern = paste0(profanitylist, collap
                                           replacement = "", corpus)
 replace_numbers <- function(corpus) gsub(pattern = "[0-9]+", 
                                          replacement = "", corpus)
+
 
 #List of clean functions
 reduce_list <- list(remove_symbols, 

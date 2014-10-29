@@ -5,7 +5,7 @@ clean.save.rm <- function(sourceletter, lines) {
     if(sourceletter == "b"){sourcename = "blogs"}
     if(sourceletter == "n"){sourcename = "news"}
     text <- replace_contraction( #replaces all short-form contractions with full words
-        readLines(paste0("en_US/en_US.",sourcename,".txt"),
+        readLines(paste0(directory,"/final/en_US/en_US.",sourcename,".txt"),
                   n = lines)
         )
     cor.cl <- cleanCorpus(Corpus(VectorSource(text)))

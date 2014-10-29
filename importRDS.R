@@ -5,17 +5,17 @@ dfTokenSplit <- function(df){
     df.split <- data.frame(do.call(rbind, strsplit(as.vector(df$token), split = " ")))
     ncolumns <- 
         names(df.split) <- c(paste0("token",1:ncol(df.split)))
-    newdf <- cbind(df.split, count = df$count)
+    newdf <- cbind(df.split, token = df$token, count = df$count)
     return(newdf)
 }
 
-tokensplittoRDS <- function(df, sourceletter, lines, ngrams){
-    df.split <- data.frame(do.call(rbind, strsplit(as.vector(df$token), split = " ")))
-    ncolumns <- 
-        names(df.split) <- c(paste0("token",1:ncol(df.split)))
-    newdf <- cbind(df.split, count = df$count)
-    saveRDS(newdf, file = paste0(directory, "/final/rds_files/", sourceletter,".",lines,".",ngrams,"grams.split.rds"))
-}
+# tokensplittoRDS <- function(df, sourceletter, lines, ngrams){
+#     df.split <- data.frame(do.call(rbind, strsplit(as.vector(df$token), split = " ")))
+#     ncolumns <- 
+#         names(df.split) <- c(paste0("token",1:ncol(df.split)))
+#     newdf <- cbind(df.split, token = df$token, count = df$count)
+#     saveRDS(newdf, file = paste0(directory, "/final/rds_files/", sourceletter,".",lines,".",ngrams,"grams.split.rds"))
+# }
 
 importRDS <- function(sourceletter, lines, ngrams, rweka, type, sorted){
     #INPUT:
@@ -36,6 +36,7 @@ importRDS <- function(sourceletter, lines, ngrams, rweka, type, sorted){
                             package,".rds"))
     }else if(type == "tdm"){
         if(file.exists(paste0(directory, "/finalrds_files/", sourceletter,".",lines,".",ngrams,"grams.split.rds")) == FALSE){
+        #If the split file does not exist:
             cat(paste0(directory, "/finalrds_files/", sourceletter,".",lines,".",ngrams,"grams.split.rds"), "DNE", "\n")
             f <- readRDS(paste0(directory, "/final/rds_files/",sourceletter,".",lines,".",ngrams,"grams.",
                                 package,".rds"))
@@ -48,6 +49,7 @@ importRDS <- function(sourceletter, lines, ngrams, rweka, type, sorted){
             f <- dfTokenSplit(f)
             saveRDS(f, file = paste0(directory, "/final/rds_files/", sourceletter,".",lines,".",ngrams,"grams.split.rds"))
         } else {
+        #If the split file DOES exist:
             cat(paste0(directory, "/final/rds_files/", sourceletter,".",lines,".",ngrams,"grams.split.rds"), "exists", "\n")
             cat("loading ", paste0(directory, "/final/rds_files/", sourceletter,".",lines,".",ngrams,"grams.split.rds"), "\n")
             f <- readRDS(paste0(directory, "/final/rds_files/", sourceletter,".",lines,".",ngrams,"grams.split.rds"))

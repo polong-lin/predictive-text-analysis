@@ -1,11 +1,7 @@
 library(qdap)
 
-dfchecker <- function(nwords){
-    #split.length is the true number of words in the original split search-string
-    #nwords is the number of words counting from the end of the string to be matched
-    #return: logical vector to match words in string to words in dictionary
-    paste("d[",1:nwords,"] == split[",1:nwords,"]",collapse = " & ", sep = "")
-}
+source("predictive-text-analysis/pkn/pkn.logical.dfchecker.R")
+
 # 
 # text <- c("a", "b", "c", "d")
 # nwords <- length(text) #4
@@ -17,6 +13,7 @@ dfchecker <- function(nwords){
 # text[3:4]
 # text[4:4]
 # 
+
 
 dfFindNextWord <- function(string, dictlist, n = 5){
     #string: a string whose next word you want to predict
@@ -32,33 +29,37 @@ dfFindNextWord <- function(string, dictlist, n = 5){
     string <- sub("^\\s+|\\s+$", "", string) #remove leading and trailing whitespaces
     
     #to lowercase and expand contractions
-    string <- replace_contraction(tolower(string))
+    string <- tolower(replace_contraction(tolower(string)))
     
     #split into words by " "
     split <- unlist(strsplit(string, " "))
-    rm(string)
     
     #reduce string of x number of words to a string of y-1 of numbers, where y is the number of ngram dictionaries
     if(length(split) > length(dictlist) - 1) {
         split <- split[c(length(split)-length(dictlist) + 2) : length(split)] 
         cat("Warning: String too long; can not search for >", length(dictlist)-1," words. Shortening string...")
         cat("\n")
-    }
-    
-    nwords <- length(split) +1 #counter to keep track of which ngrammodel to use for search
-    
-    dfnextword <- data.frame(token = NA, count = NA) #creates dummy df with "invalid" numeric token
-    
-    #If no words are returned (all NAs), then use 1 less ngram to search:
-    while(is.na(dfnextword[1,1]) == TRUE & nwords > 1){
-        nwords = nwords - 1
-        split <- split[c(length(split)-nwords+1):length(split)]
-        #print(c("[Search string]:"))
+        cat("Reduced to: ")
         cat(split)
         cat("\n")
-        #print(paste0("checking dictlist[[",nwords+1,"]]"))
-        d <- dictlist[[nwords+1]]
-        dfnextword <- d[eval(parse(text=dfchecker(nwords))),c(paste0("token",nwords+1), "count")]
+    }
+    
+    nwords <- length(split) +1
+    
+    dfnextword <- data.table(token = NA, count = NA) #creates dummy df with "invalid" numeric token
+
+    #If no words are returned (all NAs), then use 1 less ngram to search:
+    while(is.na(dfnextword[1,token]) == TRUE & nwords > 1){
+        nwords = nwords - 1
+        split <- split[c(length(split)-nwords+1):length(split)]
+        print(c("[Search string]:"))
+        cat(split)
+        cat("\n")
+        
+        dfnextword <- dictlist[[nwords+1]][eval(parse(text=logical.dfchecker(dict_number = (nwords + 1),
+                                                          token_start = 1, string = split,
+                                                          string_start = 1,
+                                                          ntokens = nwords))),]
         if(is.na(dfnextword[1,1]) == TRUE){
             if(nwords == 1){
                 print(c("Error: Could not predict next word."))
@@ -77,8 +78,7 @@ dfFindNextWord <- function(string, dictlist, n = 5){
     cat("\n")
     result <- dfnextword[1:n,]
     result <- result[!is.na(result$count),] #remove NAs from result
-    names(result) <- c("next_word", "count")
-    return(c(result, searchstring = list(split)))
+    return(result)
 }
 
 #Example:
